@@ -99,7 +99,7 @@ mily, % the size of the fonts that are used for the code
 \pagestyle{plain}
 
 
-\section{Contextual Introduction to the Beer Market}
+\section{Contextual Introduction to the Beer Market} \label{sec_intro}
 \begin{itemize}
 \item Beer market description: Find market study that describes competitive situation
 \item Prices, Competition, Profits, Marginal Costs
@@ -267,12 +267,93 @@ All else equal, a price increase by Heineken will cause a greater customer churn
 
 \section{Market Simulation} \label{sec_marketsim}
 
+However interesting the beta coefficients as measures of preferences might be, they enable managerial decisions in a limited way and provide a very technical and abstract economic interpretation in terms of preferences.
+To enhance the usefulness of the hierarchical Bayesian MNL model, the resulting distributions of beta coefficients can be translated into Nash equilibrium prices, shares and profits.
+This section describes the beer market simulation and its results for the relevant subset of five brands in four different scenarios from full competition to monopoly.
+A focus will be set on the difference between the two scenarios in the middle: brand competition and merge competition, where the first refers to a market environment before the merger and the latter to a duopoly in which Heineken and both Amstel brands belong to the same profit-maximizing owner.
+
+To compare the different scenarios, three metrics are calculated: First, Nash equilibrium prices $p_i$, which refer to the $i^{th}$ beer's profit optimal price.
+Equilibrium price in this case means that a deviation for all players from its respective price would no longer result in a higher profit.
+Based on that, the market shares $MS_i$ are computed for all brands as well as for the outside good (i.e. consumers choose to not purchase any beer).
+Combining the two metrics price and market share with marginal costs\footnote{as stated in section \ref{sec_intro}, this study assumes constant marginal costs of $MC = 0.192 \text{\euro}$ across all products.} enables the calculation of the product of contribution margin and market share, which is proportional to profits\footnote{no assumption about the market size is made. A simple multiplication of the market size with the formula above would lead to profits.}:
+\begin{align*}
+Profit_i \propto (p_i - MC) * MS_i = CM_i * MS_i
+\end{align*}
+Those three metrics enable a clear overview over market outcomes on individual brand level.
+However, it is also of high interest to quantify the aggregate market result, which can be achieved by computing the weighed average price in the market 
+\begin{align*}
+\bar{p}_m = \sum_{i=1}^n{p_i * MS_i},
+\end{align*}
+where $n$ refers to the number of players plus one outside good.
+By including the outside share at a price of 0, this metric quantifies a trade-off between the brands' prices and the outside share.
+Higher market power in the market leads to two changes that adversely affect $\bar{p}$: First, individual prices increase leading to an increase in $\bar{p}$.
+Second, the outside share increases since some customers drop out of the market, which causes $\bar{p}$ to decrease.
+If the weighed average price remained constant after a merger in the market, that means the increase in individual prices is compensated by the increase in the outside share.
+This enables a conclusion about which effect dominates in certain situations.
+
 \begin{figure}[ht]
 	\centering
   \includegraphics[scale = 0.7]{figures/bar_price_share_brand_merge_5.pdf}
 	\caption{Prices and market shares in a profit-maximizing Nash equilibrium for five brands and outside option in a brand competition vs. merge setting}
 	\label{fig_bar_five}
 \end{figure}
+
+Figure \ref{fig_bar_five} visualizes the market outcomes in terms of prices, market shares and profits for each of the four market scenarios.
+Overall, the results appear to be in line with economic theory.
+The remainder of this section discusses the individual market scenario outcomes and its implications.
+Assuming full competition (i.e. all brands compete against each other), prices for most individual brands as well as $\bar{p}$ are lowest.
+As expected, lowest prices come with the lowest outside share of 6.4\%.
+It is interesting to note that Heineken's price is in between Amstel's (lower) and Estrella's prices (higher).
+Even though it is more than 20 cents pricier than Amstel's two beers, its market share at 25\% is the highest among all beers.
+This result is in line with the distribution of the model's beta coefficients.
+The average consumer prefers Heineken over all other brands and Amstel is the least preferred brand, assuming constant prices.
+It is therefore not surprising that even though Heineken charges higher prices than Amstel, it's market share is higher.
+
+Now assume competition according to the beer brands, i.e. both Amstel beers, both Estrella beers, and Heineken each belong to a different owner (brand competition).
+In this market of three players, weighed average prices increase from 0.406 to 0.428\euro\ despite a rise in the outside share by nearly six percentage points.
+A look at the individual prices suggests that thanks to its increased market power, Amstel increases their prices to nearly match Heineken's.
+Remember that the correlation between the betas of Heineken and Amstel is relatively high, which means they serve similar customer segments.
+Still, Heineken's beta distribution is shifted to the right of Amstels' distributions\footnote{see figure \ref{fig_dens_amstel_biv} for the beta distribution density plots of the five beers.}, which means that consumers on average prefer Heineken over Amstel.
+Since the prices of the three brands are now more similar than before, this translates to a drastic increase in Heineken's market share to more than one third of the entire market and a modest decrease in both Amstels' shares by around seven percentage points each.
+
+\begin{table}[!htbp] \centering 
+  \caption{Weighed average prices in the entire market and producer surplus for three merged brands before vs. after the merger} 
+  \label{tab_merge} 
+\begin{tabular}{@{\extracolsep{10pt}} lcc}
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & $\bar{p}\text{ (\euro)}$ & $PS_m\text{ (\euro)}$ \\
+\hline \\[-1.8ex] 
+\begin{tabular}[c]{@{}l@{}}Before merger\end{tabular} & 0.428 & 0.173 \\
+\begin{tabular}[c]{@{}l@{}}After merger\end{tabular} & 0.442 & 0.180 \\
+$\Delta$ & +0.014 & +0.007 \\
+$\Delta\%$ & +3.3\% & +3.5\% \\
+\hline \\[-1.8ex] 
+\end{tabular}
+\end{table}
+
+The research question whether a merger between Heineken and Amstel would yield an incremental profit beyond the sum of the individual profits can now be answered by changing the ownership matrix so that those three beers now belong to the same owner and thus not price compete anymore.
+This market is now a duopoly with two players (Heineken and Amstel beers vs. Estrella beers) and referred to as merge competition.
+\ref{tab_merge} displays the weighed average price and the producer surplus before and after the merger and quantifies the absolute and relative difference between those two scenarios.
+While $\bar{p}$ increases by 3.3\%, the producer surplus even increases by 3.5\%.
+This represents the incremental profit due to the merger due to higher market concentration and less price competition with beer brands that targeted similar-preferences customers.
+The sole competitor Estrella's relative market power compared to the new Amstel--Heineken firm decreases.
+Nevertheless, thanks to the consolidation its absolute market power increases.
+Though their prices remain relatively constant, their profits increase due to a higher market share.
+This is counter-intuitive at first---but has a logical explanation.
+Looking at the distribution of beta coefficients in figure \ref{fig_dens_five} one can infer that preferences are higher for Estrella than for Amstel, on average.
+As Amstel's prices in this scenario approach Estrella's, the latter becomes more attractive and leads to higher market shares and profits for both Estrella beers.
+In line with expectations, the outside share further increases to 17\% in the duopoly.
+
+While the first scenario represented one extreme market constellation---full competition---the last one scrutinizes the other extreme---a monopoly.
+As expected, all individual prices increase and are highest among all four scenarios.
+This translates in a weighed average price of 0.46\euro\, even though almost one third of the consumers drop out of the market.
+Interestingly, while all individual prices increase, the individual profits do not increase by the same magnitude due to a significant decrease in market share for most brands.
+Notably, the cheapest beer in this scenario is one exception to that.
+Amstel Clasica Lata at $p=0.50\text{\euro}$ increases its profits by almost 75\% compared to the duopoly, while Amstel Extra Lata's profits only increase marginally.
+This can be explained by the slightly higher preference of the average consumer for Amstel's Extra Lata beer over Clasica Lata visualized in figure \ref{fig_dens_amstel_biv}.
+Since there is no competition anymore, the firm uses this slight preference for Extra Lata and exploits the consumers' higher willingness to pay for the more preferable beer, while the remaining Amstel brand captures all consumers that would otherwise have dropped out of the market.
+
 
 \begin{figure}[ht]
 	\centering
@@ -286,7 +367,7 @@ All else equal, a price increase by Heineken will cause a greater customer churn
 
 \clearpage
 \appendix
-\section{Figures}
+\section{Appendix}
 
 \begin{figure}[ht]
 	\centering
@@ -335,10 +416,7 @@ This thesis has not been used, either in whole or part, for another examination 
 \vspace{1cm}
 
 Frankfurt am Main, July 23, 2019
-\vspace{2cm}
 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-\vspace{0.1cm}
-
+\includegraphics[scale=0.12]{signature.png}\\
 Lukas J\"urgensmeier
 \end{document}
