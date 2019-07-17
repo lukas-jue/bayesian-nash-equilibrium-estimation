@@ -28,7 +28,8 @@
 
 \lstset{ %for R colors and formatting
   language=R,                     % the language of the code
-  basicstyle=\scriptsize\ttfamily, % the size of the fonts that are used for the code
+  basicstyle=\scriptsize\ttfa
+mily, % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\scriptsize\color{Blue},  % the style that is used for the line-numbers
   stepnumber=1,                   % the step between two line-numbers. If it is 1, each line
@@ -106,13 +107,13 @@
 \item Is it the Spanish beer market?
 \end{itemize}
 
-\section{Motivation of the Analytical Model}
+\section{Motivation of the Analytical Model} \label{sec_motivation}
 Historically, marketing research has heavily relied on Conjoint Analysis.
 It is a tool to measure consumers' preferences in a more realistic way by asking them to choose between different products that imply trade-offs.
 This is a method to derive consumers' preferences in a more credible way than to ask them which brand or feature they prefer,
 since this often yields trivial results\footnote{i.e. preferring the cheap vs. the expensive good or valuing the better quality good more than the low quality product.}.
-Choice-based Conjoint data enables researchers to calculate counterfactual scenarios, such as what happens to a company's market share if a competitor changes its price.
-To analyze choice-based Conjoint data, market research has focused on the Multinomial Logit (MNL) Model.
+Choice-based conjoint data enables researchers to calculate counterfactual scenarios, such as what happens to a company's market share if a competitor changes its price.
+To analyze choice-based conjoint data, market research has focused on the Multinomial Logit (MNL) Model.
 Unfortunately, the MNL model is based on two strong assumptions.
 First, choices should be independent of irrelevant alternatives (IIA).
 This means that consumers' choices are not influenced by the presence or absence of another, supposedly irrelevant other choice option.
@@ -123,18 +124,18 @@ The second strong assumption that is required for MNL estimation is homogeneity 
 This implies that consumers' preferences---expressed by the beta estimates---are identical, which does not hold in reality. 
 
 Literature has acknowledged those violations and proposed the heterogeneous MNL, a more flexible model that relaxes the IIA assumption \citep{steckelHeterogeneousConditionalLogit1988}.
-As a remedy to the second critical assumption's violation, hierarchical MNL models allow for differences in consumer preferences.
+As a remedy to the second critical assumption's violation, hierarchical MNL models allow for differences in preferences by modeling individual MNL models for every individual customer.
 
-When taking those beta coefficients to simulate individual choices as well as aggregate market outcomes and equilibrium prices,
-standard approach was to assume that all prices in the choice set were within the consumer's unobserved budget.
+When taking the derived beta coefficients from this hierarchical MNL model to simulate individual choices as well as aggregate market outcomes and equilibrium prices,
+the standard approach was to assume that all prices in the choice set were within the consumer's unobserved budget.
 \cite{pachaliPerilsIgnoringBudget2017} argue that this simplification leads to a serious over-estimation of equilibrium prices.
 They claim that it still holds if priors such as sign constraints are included and reasonably specified in the estimation such as in \cite{sonnierHeterogeneityDistributionsWillingnesstopay2007} and \cite{allenbyEconomicValuationProduct2014}.
 Instead of "cleaning" the data until derived estimates mirror the desired price ranges, this paper follows \cite{pachaliPerilsIgnoringBudget2017}
 and applies a hierarchical Bayes model which is capable of inferring previously unobserved budgets, additionally to sign constraints for $\beta_{price}$.
-This study applies the indirect utility model by \cite{berryAutomobilePricesMarket1995}.
+To that matter, the present study applies the indirect utility model by \cite{berryAutomobilePricesMarket1995}.
 It is superior to the price screening model proposed by \cite{gilbrideChoiceModelConjunctive2004},
 since its models a continuous choice probability dependent on price.
-Logit choice probabilities need to be continuous at every draw in order to derive a pure-strategy Nash equilibrium \citep{morrowFixedPointApproachesComputing2011, pachaliPerilsIgnoringBudget2017}.
+Logit choice probabilities need to be continuous at every draw in order to derive a pure-strategy Nash equilibrium \citep{morrowFixedPointApproachesComputing2011a, pachaliPerilsIgnoringBudget2017}.
 
 Concluding this section, the analytical model implemented in this study addresses three serious shortcomings of most common methods to conduct a market simulation and derive profit-maximizing prices.
 It relaxes the IIA assumption, allows for heterogeneous individual-level consumer preferences, and infers previously unobserved budgets.
@@ -145,8 +146,8 @@ Those three model specifications are believed to yield more realistic and less b
 
 While the previous section motivated the analytical model and introduced model extensions to relax unrealistic assumptions,
 this part introduces the empirical application of those tools.
-This paper analyzes a Choice-based Conjoint data set for choices among different beer brands obtained by the market research institute Kantar TNS.
-The data set recorded preferences for canned beer.
+This paper analyzes a choice-based conjoint data set for choices among different beer brands obtained by the market research institute Kantar TNS.
+The data set recorded preferences for canned beer presumably in the Spanish market.
  $N=407$ respondents participated in the study and choose among $p=10$ alternatives per choice task (nine beer brands and one outside option).
 Every participant performed $t=15$ choice tasks. In total, 15 distinct beer brands and one outside alternative were included in the study,
 while the subjects were only presented with a subset of $p$ alternatives, always including the outside choice.
@@ -155,46 +156,73 @@ The remaining seven beer brands based on their brand names are assumed to belong
 Additionally to the beers' brand names, the price was displayed to the subjects, which ranged from 0.22 to 0.74\euro.
 
 Consistent with economic theory, there should be a negative relationship between price and demand.
-This is empirically analyzed in section \ref{sec_marketsim} and visually displayed in figure \ref{fig_scatter_brand_comp}.
+The less competition and hence more market power is present, the higher should be the prices, which should come with less demand for beer.
+Since demand is measured in relative market share in this model, this means a decrease in the inside goods' shares and an increase in the outside option (i.e. consumers drop out of the market and do not purchase any product).
+Besides price and market share, profit is the most important metric that is optimized by the individual players in the market.
+Though there is a clear intuition how prices and market shares develop dependent on the competitive scenario, no trivial statement can be made about profits.
+With higher prices comes usually a lower market share---thus we cannot tell a priori which effect should have a stronger impact on profits.
+
+Profit will then be used to calculate the producer surplus before and after the Heineken--Amstel merger.
+This metric will then be used to assess whether there is any incremental profit to this transaction.
+While the next section introduces the underlying analytical model and its result, the detailed market simulation outcomes can be found in section \ref{sec_marketsim}.
 
 
 \section{Model Description and Results}
-Model
-\begin{itemize}
-\item $N=407$ respondents
-\item $p=10$ choice tasks per respondent
-\item Constraints: Only positive beta coefficient for price and budget. If we had negative price coefficients, there would be a negative reward in the BLP formula for saving portions of the budget
-\item Budget constraints are inferred by consumer choices and max/min price chosen
-\end{itemize}
 
-Results
-\begin{itemize}
-\item present histograms of beta coefficients
-\item discuss the means of beta coefficients: The higher it is, the more preferably the brand is, on average.
-\item Look at standard deviations: Get an idea about how heterogeneous/homogeneous the preferences are
-\item Get an insight about price sensitivity: Higher beta coefficient means less price sensitivity (stemming from preferences, not price coefficient)
-\end{itemize}
+Based on the motivation for the analytical model described in section \ref{sec_motivation}, this section first discusses the implemented model and then presents its results.
+This study uses a heterogeneous MNL model and utilizes hierarchical Bayes methods to generate the individual-level beta coefficients and the specification of the prior distribution.
+Thanks to that method, every consumer's preferences are modeled with an individual MNL model.
+However, since every participant only recorded $t=15$ choice tasks, there are not enough observations to reliably estimate such a model.
+That is why this study uses Bayesian estimation with Markov Chain Monte Carlo (MCMC) to sample the individual-level betas and estimate the parameters for the prior distribution.
+
+Those beta coefficients are a measure of customer preferences---a higher beta translates to a higher preference for a product, while a negative value implies dis-utility from that good for the consumer.
+The distribution of betas can then be used to compute market shares either based on posterior means, the posterior of the hierarchical prior, or the lower-level non-smooth model \citep{pachaliHowGeneralizeHierarchical2017}.
+This paper makes use of the latter, since the first two methods have serious shortcomings and the latter combines the advantages from both methods.
+Using the posterior means as an estimate for beta ignores posterior uncertainty and focuses too much on the middle of the market.
+Optimal products will therefore tend to concentrate around the mean preferences without much differentiation between brands because it underestimates the preference heterogeneity in the population.
+The second method---drawing from the hierarchical prior relies too much on the assumptions about the distributional parameters. 
+According to \cite{pachaliHowGeneralizeHierarchical2017}, the lower-level non-smooth method generally outperforms the first two approaches and has more desirable characteristics.
+
+While most market simulations do not account for consumer's budget, this study uses a heterogeneous MNL model with BLP-type indirect utility \citep{berryAutomobilePricesMarket1995}, that accounts for budgets that are inferred from choices and the minimum and maximum price chosen as proposed by \cite{pachaliPerilsIgnoringBudget2017}.
+Since the probability function from this model is differentiable, one can use the derivatives-based fixed point approach for a relatively quick estimation \citep{morrowFixedPointApproachesComputing2011a}.
+
+The implemented model constrains the beta coefficients for price and budget.
+Both are restricted to positive values only, which makes the model much more realistic.
+Usually one would assume the price coefficients to be negative only, however in the BLP-type specification there is a reward for not using up the entire budget. Hence, $\beta_{price}$ must be positive \citep{pachaliPerilsIgnoringBudget2017}.
+In some cases, it makes sense to additionally impose ordinal constraints on the betas among brands.
+This would be beneficial if there was a clear and strict preference for individual specifications of the products in question (i.e. a higher quality ceteris paribus is always more desirable).
+For this particular beer data set, this cannot reasonably be justified, since there is no objective order of beers.
+
+This part described the implemented heterogeneous MNL model with BLP-type indirect utility.
+The remainder of this section focuses on the model results and specifically discusses the estimated distributions of the beta coefficients.
+To estimate the betas, the MCMC routine ran for 100,000 iterations, while keeping every $15^{th}$ draw.
+This lead to the loglikelihood values displayed in figure \ref{fig_mcmc}.
+After removing the first 3,100 values as burn-in one can assume from a visual inspection that the algorithm converged---the time series appears to be stationary in figure \ref{fig_mcmc_burnin}.
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[]{figures/mcmc_before_burnin_fitted.pdf}
+  \includegraphics[scale = 0.8]{figures/mcmc_before_burnin_fitted.pdf}
 	\caption{Loglikelihood values of the MCMC routine with 100,000 iterations, keeping every 15\textsuperscript{th} value}
 	\label{fig_mcmc}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[scale = 0.8]{figures/mcmc_after_burnin_fitted.pdf}
+  \includegraphics[scale = 0.7]{figures/mcmc_after_burnin_fitted.pdf}
 	\caption{Loglikelihood values of the MCMC routine, after removing the first 3,100 observations}
 	\label{fig_mcmc_burnin}
 \end{figure}
 
-\begin{figure}[ht]
-	\centering
-  \includegraphics[scale = 0.7]{figures/corrplot_betas_five.pdf}
-	\caption{Correlation of betas for price, budget and five brands}
-	\label{fig_corr_five}
-\end{figure}
+The model yields the distribution of betas for all 15 brands as well as for budget and price.
+Since the thorough analysis of 17 coefficients would be beyond the scope of this paper, only five presumably interesting brands\footnote{Amstel Clasica Lata, Amstel Extra Lata, Estrella Damm Lata, Estrella Galicia Lata and Heineken (all 33 cl cans)} were analyzed in detail.
+The results for the entire data set can be found in the appendix in figures \ref{fig_corr_all} and \ref{fig_hist_all}.
+A beta distribution with more probability mass in the positive domain of the density plot relative to others indicates that this brand is more preferred by the average customer.
+Looking at the density plot for the beta coefficients of the five select beers (figure \ref{fig_dens_five}), there are some interesting differences in preferences:
+First, Heineken has the highest mean and its distribution is visibly shifted to the right, compared to the other brands.
+This indicates a higher preference for Heineken given identical prices for the average customer.
+Secondly, both Estrella brands have less variant beta distributions, which hints at a less heterogeneous consumer segment.
+On the other hand, both Amstel beers are characterized by high variance distributions with a considerable and highest relative area under the curve in the negative domain, compared to the Estrella and Heineken beers.
+That means that Amstel is for many consumers the least preferred beer in this subset and even comes with dis-utility ($\beta_{i}<0$) for those.
 
 \begin{figure}[ht]
 	\centering
@@ -203,24 +231,41 @@ Results
 	\label{fig_dens_five}
 \end{figure}
 
-\section{Market Simulation} \label{sec_marketsim}
-\begin{itemize}
-\item Assumptions about absolute marginal costs (e.g. 0.2 \euro). We assume it's not proportional to price and constant for all different brands.
-\item Start with small set of brands (e.g. 3 Amstel beers + 1 outside)
-\item Same ownership, which means monopoly
-\item In a second step, we model a duopoly with same brands as before and one additional competitor (e.g. two Estrella brands)
-\item If computationally feasible, we model all 15 beer brands in the same model (full competition, complete market)
-\item Compute profit for each scenario by\\
- $Profit = (Equilibrium\ Price - MC)* Market\ Share$
-\item Think about mergers: Vary ownership structure, e.g. we're Amstel and we buy Heineken. What does that do to Amstel's profits and market share?
-\end{itemize}
+The density plot reveals very similar preferences for both Amstel beers.
+It is therefore interesting to have a look at the bivariate density plot that displays their joint beta distribution.
+Figure \ref{fig_dens_amstel_biv} reveals that there is a slightly higher preference in the sample for Amstel Extra Lata compared to Amstel Clasica Lata.
+This finding will subsequently explain large price discrepancies between those brands in a monopoly (see section \ref{sec_marketsim}).
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[scale = 0.7]{figures/opt_price_one_brand_static_monopoly.pdf}
-	\caption{Price--profit curve in a static, one-brand monopoly market and profit-maximizing price (dashed vertical line)}
-	\label{fig_opt_monopoly}
+  \includegraphics[scale = 0.6]{figures/amstel_bivariate_density.pdf}
+	\caption{Bivariate density plot for two Amstel brands displaying slightly higher preferences for Amstel Extra Lata}
+	\label{fig_dens_amstel_biv}
 \end{figure}
+
+Not only the density plots of beta distributions are of interest---their similarity in terms of correlation can quantify how similar individual brands are compared to another one.
+The higher the correlation between two brands, the more similar are customers' preferences for those two beers.
+Most importantly, this implicates that there is a high price-competition between those brands.
+If there is a high correlation between preferences, customers regard two brands as good substitutes and therefore are mainly guided by the beer's price in their purchase decision.
+Turning to the subset of beers at hand, the two Amstel brands show the highest correlation ($\rho=0.95$), followed by a correlation coefficient of 0.72 and 0.75 for the Amstel brands with Heineken.
+This provides a first clue that Amstel and Heineken find themselves in a strong price competition, because they serve similar customers.
+Contrary to that, a low correlation between the distribution of two beta coefficients implies that those brands compete less price-wise, since they serve different segments of the market.
+Especially noteworthy is that Estrella has the least correlated beta distributions compared to all other brands, which indicates that they compete least for similar customers compared to Heineken and Amstel.
+
+Lastly, the correlation matrix also displays the correlation of betas for beer brands with betas for price.
+This is an indicator how price-sensitive customers are to price changes.
+Interestingly, customers of Estrella Galicia Lata are found to be almost completely price insensitive ($\rho=0.02$), while Heineken's customers are most influenced by price changes ($\rho=0.52$).
+All else equal, a price increase by Heineken will cause a greater customer churn than the same price increase for Estrella, since the latter's customers are least price sensitive and might be influenced mainly in their purchasing decision by quality rather than price.
+
+\begin{figure}[ht]
+	\centering
+  \includegraphics[scale = 0.7]{figures/corrplot_betas_five.pdf}
+	\caption{Correlation of betas for price, budget and five brands}
+	\label{fig_corr_five}
+\end{figure}
+
+
+\section{Market Simulation} \label{sec_marketsim}
 
 \begin{figure}[ht]
 	\centering
@@ -237,15 +282,26 @@ Results
 \end{figure}
 
 \section{Managerial and Research Implications}
-\begin{itemize}
-\item Take results from market simulation and derive managerial implications
-\item E.g. take out product with the lowest market share and check if market share and profits of remaining products from our brand increases
-\item Tool to determine if a merger would be beneficial
-\end{itemize}
+
 
 \clearpage
 \appendix
 \section{Figures}
+
+\begin{figure}[ht]
+	\centering
+  \includegraphics[scale = 0.5]{figures/corrplot_betas_full.pdf}
+	\caption{Correlation of betas for price, budget and all 15 brands}
+	\label{fig_corr_all}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+  \includegraphics[scale = 0.6]{figures/hist_betas_full.pdf}
+	\caption{Histograms of betas for price, budget and all 15 brands}
+	\label{fig_hist_all}
+\end{figure}
+
 \begin{figure}[ht]
 	\centering
   \includegraphics[scale = 0.7]{figures/bar_price_share_full_brand_15.pdf}
@@ -253,12 +309,14 @@ Results
 	\label{fig_bar_fifteen}
 \end{figure}
 
+
+
 \section{R Code}
 
-\begin{lstlisting}[language=R,caption={Estimation Code}, label=lst:estim]
-
-
-\end{lstlisting}
+%\begin{lstlisting}[language=R,caption={Estimation Code}, label=lst:estim]
+%
+%
+%\end{lstlisting}
 
 
 \clearpage
