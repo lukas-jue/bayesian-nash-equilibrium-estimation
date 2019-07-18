@@ -28,8 +28,7 @@
 
 \lstset{ %for R colors and formatting
   language=R,                     % the language of the code
-  basicstyle=\scriptsize\ttfa
-mily, % the size of the fonts that are used for the code
+  basicstyle=\scriptsize\ttfamily, % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\scriptsize\color{Blue},  % the style that is used for the line-numbers
   stepnumber=1,                   % the step between two line-numbers. If it is 1, each line
@@ -55,10 +54,14 @@ mily, % the size of the fonts that are used for the code
 \begin{center}
 % \vspace*{1cm}
  \includegraphics[width=0.35\textwidth]{GU-Logo-blau-CMYK.eps} \vspace{2cm}
-  
-  {\Large{\bf Estimating Profit-optimal Nash Equilibrium Market Shares and Prices for the Beer Market}} \medskip
 
-  {\Large{Hierarchical Bayesian MNL Models in a Dynamic Market Environment}} \vspace{0.5cm}
+ {\Large{\bf Bayesian Beer Market Estimation}} \medskip
+
+  {\Large{Simulating Market Outcomes with Bayesian Analysis of CBC Data in Different Dynamic Competitive Scenarios}} \vspace{0.5cm}  
+
+%  {\Large{\bf Estimating Profit-optimal Nash Equilibrium Market Shares and Prices for the Beer Market}} \medskip
+%
+%  {\Large{Hierarchical Bayesian MNL Models in a Dynamic Market Environment}} \vspace{0.5cm}
 
   Term Paper \\\vspace{2cm}
   submitted to \\\vspace{0.5cm}
@@ -90,8 +93,11 @@ mily, % the size of the fonts that are used for the code
 \tableofcontents
 \pagebreak
 \listoffigures
-\pagebreak
+%\pagebreak
 \listoftables
+%\newpage
+\renewcommand\lstlistlistingname{List of R Code Chunks}
+\lstlistoflistings
 \newpage
 \setcounter{page}{2}
 \pagenumbering{arabic}
@@ -357,8 +363,8 @@ Since there is no competition anymore, the firm uses this slight preference for 
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[scale = 0.7]{figures/scatter_price_share_brand_comp_fitted.pdf}
-	\caption{Price--Market Share scatter plot with linear regression model fit}
+  \includegraphics[scale = 0.8]{figures/scatter_price_share_all_five_scenarios.pdf}
+	\caption{Price--market share scatter plot with linear regression model fit for all four competitive scenarios with five brands excluding the outside good.}
 	\label{fig_scatter_brand_comp}
 \end{figure}
 
@@ -389,19 +395,19 @@ Since there is no competition anymore, the firm uses this slight preference for 
 	\caption{Prices and market shares in a profit-maximizing Nash equilibrium for all 15 brands and outside option in a full vs. brand competition setting}
 	\label{fig_bar_fifteen}
 \end{figure}
-
+\clearpage
 
 
 \section{R Code}
 
-%\begin{lstlisting}[language=R,caption={Estimation Code}, label=lst:estim]
-%
-%
-%\end{lstlisting}
-
+\input{code/lst_betas.tex}
+\input{code/lst_nash_esti.tex}
+\input{code/lst_compute_metrics.tex}
+\input{code/lst_plotting.tex}
 
 \clearpage
 \bibliography{library}
+
 
 \newpage
 \thispagestyle{empty}

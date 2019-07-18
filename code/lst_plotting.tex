@@ -1,0 +1,119 @@
+\begin{lstlisting}[language=R,caption={Plotting correlations, beta densities, histograms, market outcomes, and a price-market share scatterplot}, label=lst_plotting]
+########################################################
+# Plotting
+########################################################
+
+# corrplot of betas for all 15 brands
+colnames(beta_BC_LLMns) <- c("Budget", "Price", products)
+windows()
+cor(beta_BC_LLMns) %>% 
+  ggcorrplot(type = "lower", lab = TRUE)
+
+cor(beta_BC_LLMns[,c(1,2,4,7,9,10,11)]) %>% 
+  ggcorrplot(type = "lower", lab = TRUE)
+
+
+# histogram of all betas
+beta_BC_LLMns %>% 
+    data.frame() %>% 
+      gather(key = "beer_brand") %>% 
+        ggplot(aes(value)) +
+          geom_histogram() +
+          facet_wrap(~beer_brand, scales = "free") +
+          theme_bw()
+
+# density plot of five brands (all in one)
+beta_BC_LLMns[,c(4,7,9,10,11)] %>% 
+  data.frame() %>% 
+  gather(key = "beer_brand") %>% 
+  ggplot(aes(value)) +
+  geom_density(aes(fill = beer_brand), position="identity", alpha = 0.3) +
+  xlim(c(-10, 20)) +
+  ylim(c(0, 0.095)) +
+  scale_fill_manual(values = c("#FD0505", "#FF9A9A", "#000CD3", "#00C1EA", "green")) +
+  theme_bw() +
+  theme(legend.position = c(0.2, 0.8),
+        legend.direction = "vertical")
+
+# density plot of five brands (separate)
+beta_BC_LLMns[,c(2,4,7,9,10,11)] %>% 
+  data.frame() %>% 
+  gather(key = "beer_brand") %>% 
+  ggplot(aes(value)) +
+  geom_density(aes(fill = beer_brand), position="identity") +
+  xlim(c(-10, 25)) +
+  ylim(c(0, 0.13)) +
+  scale_fill_manual(values = c("#FD0505", "#FF9A9A", "#000CD3", "#00C1EA", "green", "grey"), guide = FALSE) +
+  facet_wrap(~beer_brand) +
+  theme_bw()
+
+# basic plot of one scenario
+scenarios[["brand_comp"]] %>% 
+  melt() %>% 
+    ggplot(aes(x = reorder(product, value) , y = value)) +
+      geom_bar(stat = "identity", position = "dodge") +
+      coord_flip() +
+      theme(axis.text.x = element_text(angle = 90)) +
+      facet_wrap(~variable, scales = "free_x") +
+      theme_bw()
+
+# uses all competitive situations in the scenarios list and plots them side by side
+windows()
+scenarios[c("brand_comp", "full_comp")] %>% 
+  melt() %>% 
+  rename(comp_scenario = L1) %>% 
+  ggplot(aes(x = reorder(product, value) , y = value, fill = comp_scenario)) +
+  geom_bar(stat = "identity", colour="black", position = "dodge") +
+  coord_flip() +
+  labs(x = "Beer Brand",
+       y = NULL) +
+  facet_wrap(~variable, scales = "free_x") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_bw()
+
+ # only five brands #c("five_full_comp", "five_brand_comp", "five_monopoly", "five_merge_comp")
+scenarios[c("five_full_comp","five_brand_comp", "five_merge_comp", "five_monopoly")] %>% 
+  melt() %>% 
+  rename(comp_scenario = L1) %>% 
+  ggplot(aes(x = reorder(product, value) , y = value, fill = comp_scenario)) +
+  geom_bar(stat = "identity", colour="black", position = "dodge") +
+  coord_flip() +
+  labs(x = "Beer Brand",
+       y = NULL) +
+  facet_wrap(~variable, scales = "free_x") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_bw()
+
+# price-share scatterplot, w/o outside option (either for single scenario or all)
+#scenarios[["brand_comp"]] %>% 
+scenarios[c("five_full_comp","five_brand_comp", "five_merge_comp", "five_monopoly")] %>% 
+bind_rows() %>% 
+  filter(product != "Outside") %>% 
+    ggplot(aes(x = equi_price, y = equi_share)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    stat_poly_eq(formula = y ~ x, aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~~~~")), 
+                 parse=TRUE,label.x.npc = "right",
+                 output.type = "expression") +
+    theme_bw()
+
+cor(scenarios[["brand_comp"]]$equi_price, scenarios[["brand_comp"]]$equi_share)
+
+# bivariate denisity plot
+hist(beta_BC_LLMns[,c(4,7)])
+beta_BC_LLMns[,c(4,7)] %>% 
+  data.frame() %>% 
+  gather(key = "beer_brand") %>% 
+  ggplot(aes(value)) +
+  geom_density(aes(fill = beer_brand), position="identity")
+
+data.frame(beta_BC_LLMns[,c(4,7)])%>% 
+  ggplot(aes_string(x = "Amstel.Extra.Lata.33.cl", y = "Amstel.Clasica.Lata.33.cl")) +
+  stat_density_2d(aes(fill = ..level..), geom = "polygon")+
+  scale_fill_continuous(low="lavenderblush", high="blue")+
+  geom_abline(slope = 1) +
+  labs(fill = "density") +
+  #theme(legend.title = element_text("density")) +
+  theme_bw()
+
+\end{lstlisting}

@@ -1,0 +1,145 @@
+\begin{lstlisting}[language=R,caption={Estimation of the hierarchical Bayesian MNL model and MCMC sampling routine}, label=lst_betas]
+##############################################################
+##### Simulation & Estimation - Nash with Budget
+##### BLP-type of indirect utility
+##############################################################
+
+rm(list=ls())
+
+# LOAD LIBRARIES
+library(xtable)
+library(devtools)
+library(MASS)
+library(Rcpp)
+library(RcppArmadillo)
+library(bayesm)
+library(ggplot2)
+library(ggpmisc)
+library(tikzDevice)
+library(plyr)
+library(latex2exp)
+library(FixedPoint)
+library(dplyr)
+library(reshape2)
+library(tidyr)
+library(ggcorrplot)
+
+load("100k_MCMC_corrected.RData")
+
+###Increase memory capacities
+memory.limit(size=100000000)
+
+load("Estimation_Data_Beer_20170423.Rdata")
+products = c("Amstel Extra Lata 37,5 cl","Amstel Extra Lata 33 cl","Amstel Lata 37,5 cl","Amstel Lata 33 cl","Amstel Clasica Lata 33 cl",
+             "Cruzcampo Lata 33 cl","Estrella Damm Lata 33 cl","Estrella Galicia Lata 33 cl","Heineken Lata 33 cl","Mahou 5 Estrellas Lata 33 cl",
+             "Mahou Clasica Lata 33 cl","San Miguel Lata 33 cl","Voll Damm Lata 33 cl","Steinburg (Marca Blanca Mercadona) Lata 33 cl",
+             "Marca Blanca Carrefour Lata 33 cl")
+
+#reorder that price is first in the design matrix
+for (i in 1:length(E_Data$lgtdata)){
+  E_Data$lgtdata[[i]]$X <- E_Data$lgtdata[[i]]$X[,c(16,1:15)]
+}
+
+#Number of players
+nplayers = 15
+
+##########################################
+#######Run BLP Budget model###############
+##########################################
+###Load complete sampler now...
+Rcpp::sourceCpp("rhierMnlRwMixture_rcpp_loop_Illus_BLP_type.cpp",showOutput = FALSE)
+source('rhierMnlRwMixture_main_untuned_BC.R')
+
+#number of constrained coefficients (budget & price)
+nvar_c = 2
+#position of price coefficient in design matrix
+pr=1
+
+###Prior setting
+Amu = diag(1/10, nrow = nvar_c, ncol = nvar_c)
+mustarbarc = matrix(rep(0, nvar_c), nrow = nvar_c)
+nu = 15 + nvar_c
+V = nu * diag(nvar_c)*0.5
+
+Prior = list(ncomp=1, Amu = Amu, mustarbarc = mustarbarc, nu = nu, V = V)
+Mcmc = list(R=30000, keep=3)#, s=1.6)
+#,s=c(0.1,0.5,0.5,0.5)
+out_BC = rhierMnlRwMixture_SR(Data=E_Data,Prior=Prior,Mcmc=Mcmc,nvar_c=nvar_c,pr=pr,starting_budget = log(0.74))
+
+betastar_HB_BC = out_BC$betadraw
+compdraw_HB = out_BC$nmix$compdraw
+probdraw_HB = out_BC$nmix$probdraw
+rejection = out_BC$rejection
+loglike_BC = out_BC$loglike
+
+###Compute rejection rate of sampler 
+rej_rate_indi = apply(rejection,2,mean)
+summary(rej_rate_indi)
+rej_rate_agg = mean(rej_rate_indi)
+rej_rate_agg
+
+
+########################
+###Get rid of burnin####
+########################
+
+# check visually how much burn-in is required
+plot(out_BC$loglike, type="l")
+
+data.frame(loglikelihood = out_BC$loglike) %>% 
+  mutate(index = row_number()) %>% 
+    ggplot(aes(x = index, y = loglikelihood)) +
+      geom_line(alpha = 0.7) +
+      geom_smooth(method = "lm", se = FALSE) +
+      stat_poly_eq(formula = y ~ x, aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~~~~")), 
+                   parse=TRUE,label.x.npc = "right", label.y.npc = 0.1,
+                   output.type = "expression") +
+  theme_bw()
+      
+
+burnin = 3100
+R = dim(betastar_HB_BC)[3]
+
+betastar_HB_BC = betastar_HB_BC[,,(burnin+1):R]
+compdraw_HB = compdraw_HB[(burnin+1):R]
+probdraw_HB = probdraw_HB[(burnin+1):R]
+rejection = rejection[(burnin+1):R,]
+loglike_BC = loglike_BC[(burnin+1):R]
+plot(loglike_BC, type="l")
+
+data.frame(loglikelihood = loglike_BC) %>% 
+  mutate(index = row_number()) %>% 
+  ggplot(aes(x = index, y = loglikelihood)) +
+  geom_line(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_poly_eq(formula = y ~ x, aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~~~~")), 
+               parse=TRUE,label.x.npc = "right", label.y.npc = 0.01,
+               output.type = "expression") +
+  theme_bw()
+
+
+lmdata <- data.frame(loglikelihood = loglike_BC) %>% 
+  mutate(index = row_number())
+lm(loglike_BC ~ index, data = lmdata) %>% 
+          summary()
+
+R = dim(betastar_HB_BC)[3]
+N = dim(betastar_HB_BC)[1]
+
+###Heterogeneity distribution lower level model non-smoothed  
+l=10
+betastar_BC_LLMns <- array(0,dim=c(R*l,dim(betastar_HB_BC)[2]))
+index_r = rep(rank(runif(R)),l)
+index_n = rep(rank(runif(N)),round((R*l)/N)+1)
+
+#data generation
+for(i in 1:(R*l)){
+  betastar_BC_LLMns[i,] = betastar_HB_BC[index_n[i],,index_r[i]]
+}
+#transform betastardraws to betadraws
+beta_BC_LLMns = betastar_BC_LLMns
+beta_BC_LLMns[,1] = exp(betastar_BC_LLMns[,1])
+beta_BC_LLMns[,2] = exp(betastar_BC_LLMns[,2])
+
+summary(beta_BC_LLMns)
+\end{lstlisting}

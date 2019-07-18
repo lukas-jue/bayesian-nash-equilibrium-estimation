@@ -1,0 +1,52 @@
+\begin{lstlisting}[language=R,caption={Computation of weighed average prices and profits (i.e. $CMxMS$)}, label=lst_compute_metrics]
+########################################################
+# Compute Average Prices in the Market, Weighted by Market Share
+########################################################
+
+w_a_p_full_comp <- t(scenarios[["full_comp"]]$equi_price) %*% scenarios[["full_comp"]]$equi_share
+w_a_p_brand_comp <- t(scenarios[["brand_comp"]]$equi_price) %*% scenarios[["brand_comp"]]$equi_share
+
+w_a_p_five_full_comp <- t(scenarios[["five_full_comp"]]$equi_price) %*% scenarios[["five_full_comp"]]$equi_share
+w_a_p_five_brand_comp <- t(scenarios[["five_brand_comp"]]$equi_price) %*% scenarios[["five_brand_comp"]]$equi_share
+w_a_p_five_monopoly <- t(scenarios[["five_monopoly"]]$equi_price) %*% scenarios[["five_monopoly"]]$equi_share
+w_a_p_five_merge <- t(scenarios[["five_merge_comp"]]$equi_price) %*% scenarios[["five_merge_comp"]]$equi_share
+w_a_p_five_merge_estr <- t(scenarios[["five_merge_comp_estr"]]$equi_price) %*% scenarios[["five_merge_comp_estr"]]$equi_share
+
+w_a_p_brand_comp / w_a_p_full_comp
+w_a_p_five_brand_comp / w_a_p_five_full_comp
+
+# compute average annual welfare loss for typical German consumer with the merger
+welf_loss_avg <- 102/(1/3)*(w_a_p_five_merge - w_a_p_five_brand_comp)
+welf_loss_total <- welf_loss_avg * 82000000
+
+
+########################################################
+# Compute contribution margin * market share for all scenarios
+########################################################
+MC <- rep(0.198, 15)
+for (i in 1:length(scenarios)) { #
+  # position of outside good
+  out_pos <- length(scenarios[[i]]$equi_price)
+  
+  # compute contribubtion margin times market share for every brand in every scenario in the list
+  scenarios[[i]]$CMxMS <- c((scenarios[[i]][-out_pos,"equi_price"] - MC[1:out_pos-1]) * scenarios[[i]][-out_pos,"equi_share"], NA)
+  
+}
+
+# compute CMxMS for both Amstel and Heineken before and after merger
+CMxMS_full_comp <- sum(scenarios$five_full_comp[c(1,2,5),"CMxMS"])
+CMxMS_before <- sum(scenarios$five_brand_comp[c(1,2,5),"CMxMS"])
+CMxMS_after <- sum(scenarios$five_merge_comp[c(1,2,5),"CMxMS"])
+CMxMS_monop <- sum(scenarios$five_monopoly[c(1,2,5),"CMxMS"])
+
+CMxMS_before_estr <- sum(scenarios$five_brand_comp[c(3:5),"CMxMS"])
+CMxMS_after_estr <- sum(scenarios$five_merge_comp_estr[c(3:5),"CMxMS"])
+
+
+CMxMS_after / CMxMS_before
+CMxMS_monop / CMxMS_full_comp
+CMxMS_monop / CMxMS_after
+
+CMxMS_after_estr / CMxMS_before_estr
+
+\end{lstlisting}
