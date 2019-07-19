@@ -105,13 +105,20 @@
 \pagestyle{plain}
 
 
-\section{Contextual Introduction to the Beer Market} \label{sec_intro}
-\begin{itemize}
-\item Beer market description: Find market study that describes competitive situation
-\item Prices, Competition, Profits, Marginal Costs
-\item Recent developments in the beer market (market power of few breweries)
-\item Is it the Spanish beer market?
-\end{itemize}
+\section{Introduction and a Primer on the Beer Market} \label{sec_intro}
+Which beer would Thomas Bayes, the famous philosopher and statistician that first described the Bayes' Theorem \citep{bayesEssaySolvingProblem1763} prefer?
+Though a particular preference by Bayes for a certain product cannot be inferred and this question remains unanswered by the present study, modern Bayesian methods provide a sophisticated way to estimate today's customers individual preferences based on their choices.
+This paper uses Bayesian methods applied on choice-based conjoint (CBC) data to simulate Nash equilibrium market outcomes in the Spanish beer market.
+The remainder is structured as follows: First, this section introduces the beer market and the assumptions necessary for further analysis.
+Then, section \ref{sec_motivation} motivates the analytical model, while chapter \ref{sec_vars_relat} introduces the data set and hypothesizes the expected relationships between the market simulation metrics.
+The paper then introduces the model and presents its results (section \ref{sec_model}), followed by a discussion of the resulting beer market simulation.
+The last section then concludes by proposing managerial and research implications that can be derived from the present analysis.
+
+The leading international breweries today face increasing challenges of decreasing beer consumption in Europe, new trends such as craft beer and increased regulatory pressure \citep{jpmorganWhatTapGlobal2018}.
+The second largest brewery worldwide after Anheuser-Bush InBev is Heineken, owning more than 300 brands including well-known ones such as Amstel \citep{heinekenHeinekenAnnualReport2019}.
+Though Heineken already acquired Amstel in 1968 \citep[p. 49]{oliverOxfordCompanionBeer2011}, this paper looks at the merger from today's perspective.
+The goal of this research is to assess whether a merger of Heineken and Amstel, based on today's customer preferences and market conditions would still be considered beneficial.
+Towards this end, the present study subsequently derives the producer surplus of Heineken and Amstel before and after the merger and compares that to a potential merger of Heineken with another national brand, Estrella.
 
 \section{Motivation of the Analytical Model} \label{sec_motivation}
 Historically, marketing research has heavily relied on Conjoint Analysis.
@@ -148,7 +155,7 @@ It relaxes the IIA assumption, allows for heterogeneous individual-level consume
 Those three model specifications are believed to yield more realistic and less biased estimates \citep{chandukalaChoiceModelsMarketing2008, pachaliPerilsIgnoringBudget2017}.
 
 
-\section{Exogenous Variables and Expected Relationships}
+\section{Exogenous Variables and Expected Relationships} \label{sec_vars_relat}
 
 While the previous section motivated the analytical model and introduced model extensions to relax unrealistic assumptions,
 this part introduces the empirical application of those tools.
@@ -167,13 +174,18 @@ Since demand is measured in relative market share in this model, this means a de
 Besides price and market share, profit is the most important metric that is optimized by the individual players in the market.
 Though there is a clear intuition how prices and market shares develop dependent on the competitive scenario, no trivial statement can be made about profits.
 With higher prices comes usually a lower market share---thus we cannot tell a priori which effect should have a stronger impact on profits.
+To come up with an estimate for profits, this study assumes constant marginal costs of 0.192\text{ \euro } per 0.33 cl can across all producers.
+This estimation is based on Heineken's variable costs reported in the 2018 annual report \citep{heinekenHeinekenAnnualReport2019}, less value added and alcohol taxes.
+We assume the data set to be ten years old, hence the 2018 variable costs are discounted by the compounded average inflation rate of the last decade.
+Since standard beer consists of the same ingredients and the degree of economies of scale is assumed to not differ significantly between the considered large breweries, Heineken's marginal costs are assumed to be a good proxy for all other brands' marginal costs.
 
 Profit will then be used to calculate the producer surplus before and after the Heineken--Amstel merger.
 This metric will then be used to assess whether there is any incremental profit to this transaction.
+Since the preferences for Heineken and Amstel are most similar\footnote{see section \ref{sec_model} for the beta coefficients of the individual brands and their interpretation} in the considered subset of the market, the expected incremental profit of a merger between Heineken and Amstel should be higher than the sum of individual profits of a merger between brands that have less correlated preferences, such as Heineken and Estrella.
 While the next section introduces the underlying analytical model and its result, the detailed market simulation outcomes can be found in section \ref{sec_marketsim}.
 
 
-\section{Model Description and Results}
+\section{Model Description and Results} \label{sec_model}
 
 Based on the motivation for the analytical model described in section \ref{sec_motivation}, this section first discusses the implemented model and then presents its results.
 This study uses a heterogeneous MNL model and utilizes hierarchical Bayes methods to generate the individual-level beta coefficients and the specification of the prior distribution.
@@ -351,6 +363,15 @@ Looking at the distribution of beta coefficients in figure \ref{fig_dens_five} o
 As Amstel's prices in this scenario approach Estrella's, the latter becomes more attractive and leads to higher market shares and profits for both Estrella beers.
 In line with expectations, the outside share further increases to 17\% in the duopoly.
 
+Based on the highest correlation of Heineken's with Amstel's preference coefficients, the incremental profit of a potential Heineken--Amstel merger was expected to be higher than a merger between brands that serve less similar consumers according to their preferences.
+However, the market simulation does not support that claim.
+While Heineken together with Amstel generate an additional producer surplus of 3.5\%, a merger of Heineken with the other competitor Estrella increases the sum of individual profits by 9.4\%.
+The hypothesized influence of preference similarity on the incremental profits of a merger might be overruled by other market dynamics.
+One possible explanation might be related to the beers' different customer segments.
+While Heineken's and Estrella's prices in the brand competition scenario are similar, a merger between them would result in significantly higher prices for Estrella's brands.
+This could enable a stronger customer segmentation where Estrella better captures the potential of the high-value customers, while Heineken presents itself as the preferred alternative for the medium-value customers.
+Judging from the market simulation, this segmentation might be a factor that leads to a higher incremental profit of a Heineken--Estrella merger compared to a Heineken--Amstel merger, even though the latter two brands previously find themselves in higher price competition.
+
 While the first scenario represented one extreme market constellation---full competition---the last one scrutinizes the other extreme---a monopoly.
 As expected, all individual prices increase and are highest among all four scenarios.
 This translates in a weighed average price of 0.46\euro\, even though almost one third of the consumers drop out of the market.
@@ -360,6 +381,10 @@ Amstel Clasica Lata at $p=0.50\text{\euro}$ increases its profits by almost 75\%
 This can be explained by the slightly higher preference of the average consumer for Amstel's Extra Lata beer over Clasica Lata visualized in figure \ref{fig_dens_amstel_biv}.
 Since there is no competition anymore, the firm uses this slight preference for Extra Lata and exploits the consumers' higher willingness to pay for the more preferable beer, while the remaining Amstel brand captures all consumers that would otherwise have dropped out of the market.
 
+This section described the outcomes in particular market scenarios and compared them to each other.
+However, it is still lacking a general statement about the hypothesized relationship between price and market share (i.e. demand).
+Section \ref{sec_vars_relat} stated that according to standard economic theory, a higher price should be associated with lower demand.
+To check this assumption, figure \ref{fig_scatter_brand_comp} plots all inside good market outcomes over all four market scenarios with five beer brands.
 
 \begin{figure}[ht]
 	\centering
@@ -368,8 +393,33 @@ Since there is no competition anymore, the firm uses this slight preference for 
 	\label{fig_scatter_brand_comp}
 \end{figure}
 
-\section{Managerial and Research Implications}
+The negative beta coefficient ($\beta_1 = -0.22$) in a simple linear regression model described by $MS_i = \beta_0 + \beta_1 * price_i + \epsilon$ suggests that this expected relationship is also reflected in the simulated market outcomes.
+This is in line with the imposed constraints on the beta coefficients for price in the MNL model.
+Those were assumed to be strictly positive in order to reflect a reward for not using up the entire budget in the BLP-type indirect utility model \citep{berryAutomobilePricesMarket1995}.
+On average, an increase in beer prices of $\Delta price = 0.10 \text{ \euro}$, ceteris paribus is associated with a 2.2 percentage points decrease in market share. The results from this market simulation yield interesting findings for both practitioners and researchers.
+Those will be discussed in the following last section.
 
+\section{Concluding with Managerial and Research Implications}
+The implications resulting from this market simulation can be divided into two parts: The first one discusses managerial,
+while the second part outlines suggestions for further research implications, especially in terms of model enhancement. 
+Taking a look at the Heineken-Amstel merger from the producers' side, it generated an incremental profit of 4.0\%.
+This increase in profits is solely due to higher market power and the thereby increased ability to raise prices.
+Furthermore, a merger would potentially also reduce costs due to synergies, thus even increase the profits by a larger margin.
+It is important to note that both players in the market benefited from the consolidation.
+Even the outside party in this merger, Estrella, increased their profits compared to the scenario with three different players in the market.
+This indicates that in this case, prices can be raised with less competition---even though Estrella's market power decreased relatively compared to the new Heineken-Amstel company.
+
+With the present model and derived prices and market shares, it is straightforward to compute the producer surplus as the sum of individual profits\footnote{only considering marginal costs.}.
+Also, average prices considerably increase with a higher degree of market consolidation.
+Consumer surplus can therefore be assumed to decrease.
+Contrary to the producer surplus, the implemented methodology cannot quantify the consumer surplus for the market simulation.
+When deciding whether to approve a merger of two firms from the regulator's point-of-view, economic theory argues that the overall welfare should increase \citep{perryOligopolyIncentiveHorizontal1985}.
+If the producers' gains in terms of surplus outweigh the losses in consumer surplus and strictly from an economic standpoint, the merger increases welfare and should be approved.
+However, if consumers' losses were higher than producers' additional surplus, the merger would be welfare decreasing and should be prohibited.
+Unfortunately, this study cannot infer any statements about this since the consumer surplus cannot be calculated easily.
+So far, no study known to the author derives consumer welfare from a MNL model in combination with BLP-type indirect utilities.
+Future research should therefore incorporate BLP's approach to accounting for budgets in MNL models with the methodology to derive consumer surplus from those models proposed by \cite{trainWelfareCalculationsDiscrete2015}.
+Weighing the losses and gains against each other would then enable well-informed decisions by regulatory authorities whether to accept or reject a merger based on welfare calculations.
 
 \clearpage
 \appendix
