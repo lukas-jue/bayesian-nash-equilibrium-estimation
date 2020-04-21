@@ -1,0 +1,8 @@
+\contentsline {section}{\numberline {1}Introduction and a Primer on the Beer Market}{1}
+\contentsline {section}{\numberline {2}The Necessity of Enhancing the Standard MNL Model}{2}
+\contentsline {section}{\numberline {3}Exogenous Variables and Expected Relationships}{3}
+\contentsline {section}{\numberline {4}Model Description and Results}{5}
+\contentsline {section}{\numberline {5}Simulating Nash Equilibria in Four Different Market Scenarios}{9}
+\contentsline {section}{\numberline {6}Concluding Thoughts on Managerial and Research Implications}{15}
+\contentsline {section}{\numberline {A}Appendix}{17}
+\contentsline {section}{\numberline {B}R Code}{19}

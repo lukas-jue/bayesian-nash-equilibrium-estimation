@@ -14,3 +14,12 @@ cscc-paper.pdf
 cscc-paper.pdf
 cscc-paper.pdf
 cscc-paper.pdf
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lol
+*.lot
+*.gz
+*.gz
